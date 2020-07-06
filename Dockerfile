@@ -2,4 +2,5 @@ FROM node:alpine
 WORKDIR /app
 COPY . /app/
 RUN npm install
-CMD ["npm", "start"]
+RUN npm install -g serve
+CMD ["serve", "-s", "build", "-l", "3000"]
