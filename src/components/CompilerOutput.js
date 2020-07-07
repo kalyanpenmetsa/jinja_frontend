@@ -5,11 +5,9 @@ import "ace-builds/src-noconflict/theme-tomorrow_night";
 
 function CompilerOutput(props) {
   let response_code = props.response_code;
-  if (response_code == 400) {
-    var jinja_output = "An error occured while rendering the template:" + props.jinja_output.replace(/<\/?[^>]+>/ig, "");
-  } else {
-    var jinja_output = props.jinja_output;
-  }
+  let jinja_output = (response_code !== 200)
+  ? "An error occured while rendering the template:" + props.jinja_output.replace(/<\/?[^>]+>/ig, "")
+  : props.jinja_output
   return(
     <div>
         <h5><div className="text-center">Compiler Output</div></h5>
