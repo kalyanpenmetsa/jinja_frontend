@@ -12,9 +12,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      jinja_input: 'Enter your Jinja template here!\n\nSample {{ type }} Template\n',
-      jinja_variable: '# Variables can be in JSON or YAML\n\n{"type": "Jinja"}',
-      jinja_output: 'Enter your Jinja template here!\n\nSample Jinja Template\n',
+      jinja_input: 'Enter your Jinja template here!\n\nSample {{ type }} Template',
+      jinja_variable: '# Variables can be in JSON or YAML\n\n{\n    "type": "Jinja"\n}',
+      jinja_output: 'Enter your Jinja template here!\n\nSample Jinja Template',
       jinja_error: 'Backend errors (If any) will be displayed here!',
       errors: {
         jinja_input: '',
@@ -45,11 +45,11 @@ class App extends React.Component {
     {jinja_input, jinja_variable },
     {headers: {"Access-Control-Allow-Origin": "*"}})
     .then((response) => {
-      console.log(response.data);
+      this.setState({response_code: response.status});
       this.setState({jinja_output: response.data});
     }, (error) => {
-      console.log(error.response.data);
-      this.setState({jinja_error: error.response.data});
+      this.setState({response_code: error.response.status});
+      this.setState({jinja_output: error.response.data});
     });
   }
   isReady = (errors) => {
@@ -70,7 +70,32 @@ class App extends React.Component {
       this.setState({error: true});
     }
   }
-
+  jinjaInput = (val) => {
+    const name = "jinja_input";
+    const value = val;
+    let errors = this.state.errors;
+    errors.jinja_input =
+      value.length < 1
+      ? 'Template input should not be blank'
+      : '';
+    this.setState({errors, [name]: value}, ()=> {
+      console.log(errors)
+    });
+  }
+  variableInput = (val) => {
+    const name = "jinja_variable";
+    const value = val;
+    let errors = this.state.errors;
+    errors.jinja_variable =
+      value.length < 1
+      ? 'Template input should not be blank'
+      : errors.jinja_variable =
+          !(this.isJson(value) || this.isYaml(value)) ? 'Variable is neither JSON nor YAML'
+      : '';
+    this.setState({errors, [name]: value}, ()=> {
+      console.log(errors)
+    });
+  }
   inputChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -107,8 +132,8 @@ class App extends React.Component {
         <div className="text-center"><button className="ui positive button" onClick={this.submitButton}>Render Jinja</button></div>
         <Status error={this.state.error} errors={this.state.errors} />
         <br />
-        <JinjaInput jinja_input={this.state.jinja_input} jinja_variable={this.state.jinja_variable} jinja_output={this.state.jinja_output} inputChange={this.inputChange} />
-        <CompilerOutput jinja_error={this.state.jinja_error} />
+        <JinjaInput jinja_input={this.state.jinja_input} jinja_variable={this.state.jinja_variable} jinja_output={this.state.jinja_output} inputChange={this.inputChange} jinjaInput={this.jinjaInput} variableInput={this.variableInput} />
+        <CompilerOutput jinja_error={this.state.jinja_error} jinja_output={this.state.jinja_output} response_code={this.state.response_code} />
       </div>
     );
   }

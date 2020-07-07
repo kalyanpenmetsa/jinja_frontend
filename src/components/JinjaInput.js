@@ -1,26 +1,50 @@
 import React from 'react';
+import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/mode-django";
+import "ace-builds/src-noconflict/mode-yaml";
+import "ace-builds/src-noconflict/theme-tomorrow_night";
 
 function JinjaInput(props) {
   return(
     <div>
       <div className="row">
-        <div className="col-sm ui form">
-          <div className="field">
-            <h5><div className="text-center">Template Input (Jinja)</div></h5>
-            <textarea style={{ minHeight: 500 }} className="form-control bg-dark text-light" id="exampleFormControlTextarea1" rows="5" onChange={props.inputChange} name="jinja_input" value={props.jinja_input} />
-          </div>
+        <div className="col">
+          <h5><div className="text-center">Jinja Input</div></h5>
+            <AceEditor
+              mode="django"
+              theme="tomorrow_night"
+              onChange={props.jinjaInput}
+              name="jinja_input"
+              value={props.jinja_input}
+              editorProps={{ $blockScrolling: true }}
+              setOptions={{
+                fontSize: "12pt",
+                highlightActiveLine: true,
+                highlightSelectedWord: true,
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
+                enableSnippets: true
+              }}
+            />
         </div>
-        <div className="col-sm ui form">
-          <div className="field">
-            <h5><div className="text-center">Variable Input (JSON or YAML)</div></h5>
-            <textarea style={{ minHeight: 500 }} className="form-control bg-dark text-light" id="exampleFormControlTextarea1" rows="5" onChange={props.inputChange} name="jinja_variable" value={props.jinja_variable} />
-          </div>
-        </div>
-        <div className="col-sm ui form">
-          <div className="field">
-            <h5><div className="text-center">Text Output</div></h5>
-            <textarea style={{ minHeight: 500 }} className="form-control bg-dark text-light" id="exampleFormControlTextarea1" rows="5" value={props.jinja_output} readOnly />
-          </div>
+        <div className="col">
+          <h5><div className="text-center">Variable Input</div></h5>
+          <AceEditor
+            mode="yaml"
+            theme="tomorrow_night"
+            onChange={props.variableInput}
+            name="jinja_variable"
+            value={props.jinja_variable}
+            editorProps={{ $blockScrolling: true }}
+            setOptions={{
+              fontSize: "12pt",
+              highlightActiveLine: true,
+              highlightSelectedWord: true,
+              enableBasicAutocompletion: true,
+              enableLiveAutocompletion: true,
+              enableSnippets: true
+            }}
+          />
         </div>
       </div>
       <br />
