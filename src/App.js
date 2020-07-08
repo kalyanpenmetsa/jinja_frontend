@@ -16,6 +16,7 @@ class App extends React.Component {
       jinja_variable: '# Variables can be in JSON or YAML\n\n{\n    "type": "Jinja"\n}',
       jinja_output: 'Enter your Jinja template here!\n\nSample Jinja Template',
       jinja_error: 'Backend errors (If any) will be displayed here!',
+      response_code: 200,
       errors: {
         jinja_input: '',
         jinja_variable: '',
@@ -41,7 +42,9 @@ class App extends React.Component {
 
   postData = () => {
     const { jinja_input, jinja_variable } = this.state;
-    axios.post('http://localhost:5000/render_jinja',
+    const URL = 'http://' + process.env.REACT_APP_BACKEND_HOST + ':' + process.env.REACT_APP_BACKEND_PORT + '/render_jinja';
+    console.log(URL);
+    axios.post(URL,
     {jinja_input, jinja_variable },
     {headers: {"Access-Control-Allow-Origin": "*"}})
     .then((response) => {
@@ -122,17 +125,24 @@ class App extends React.Component {
       console.log(errors)
     });
   }
+  dropHandle = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    var that = this;
+    event.dataTransfer.files[0].text().then(
+      function(data) {
+        that.setState({jinja_input: data});
+      });
+    console.log(event.dataTransfer.files[0].dropEffect);
+  }
   render() {
     return (
       <div className="container">
         <h1>Jinja2 Renderer</h1>
-        <h5>How to use?</h5>
-        <h6>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</h6>
-        <br />
-        <div className="text-center"><button className="ui positive button" onClick={this.submitButton}>Render Jinja</button></div>
         <Status error={this.state.error} errors={this.state.errors} />
         <br />
-        <JinjaInput jinja_input={this.state.jinja_input} jinja_variable={this.state.jinja_variable} jinja_output={this.state.jinja_output} inputChange={this.inputChange} jinjaInput={this.jinjaInput} variableInput={this.variableInput} />
+        <JinjaInput jinja_input={this.state.jinja_input} jinja_variable={this.state.jinja_variable} jinja_output={this.state.jinja_output} inputChange={this.inputChange} jinjaInput={this.jinjaInput} variableInput={this.variableInput} dropHandle={this.dropHandle} />
+        <div className="text-center"><button className="ui positive button" onClick={this.submitButton}>Render Jinja</button></div>
         <CompilerOutput jinja_error={this.state.jinja_error} jinja_output={this.state.jinja_output} response_code={this.state.response_code} />
       </div>
     );

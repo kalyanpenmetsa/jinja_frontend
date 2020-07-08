@@ -7,7 +7,7 @@ function CompilerOutput(props) {
   let response_code = props.response_code;
   let jinja_output = (response_code !== 200)
   ? "An error occured while rendering the template:" + props.jinja_output.replace(/<\/?[^>]+>/ig, "")
-  : props.jinja_output
+  : props.jinja_output;
   return(
     <div>
         <h5><div className="text-center">Compiler Output</div></h5>

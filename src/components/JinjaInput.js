@@ -3,12 +3,16 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-django";
 import "ace-builds/src-noconflict/mode-yaml";
 import "ace-builds/src-noconflict/theme-tomorrow_night";
+import { FileDrop } from 'react-file-drop';
 
 function JinjaInput(props) {
   return(
     <div>
       <div className="row">
-        <div className="col">
+        <FileDrop
+        onFrameDrop={props.dropHandle}
+          >
+        <div className="col" id="jinja_input">
           <h5><div className="text-center">Jinja Input</div></h5>
             <AceEditor
               mode="django"
@@ -27,6 +31,7 @@ function JinjaInput(props) {
               }}
             />
         </div>
+        </FileDrop>
         <div className="col">
           <h5><div className="text-center">Variable Input</div></h5>
           <AceEditor
