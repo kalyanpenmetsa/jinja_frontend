@@ -5,6 +5,7 @@ import CompilerOutput from './components/CompilerOutput.js';
 import Status from './components/Status.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'semantic-ui-css/semantic.min.css';
+import { Button } from 'semantic-ui-react';
 import yaml from 'js-yaml';
 import axios from 'axios';
 
@@ -12,9 +13,10 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isSubmitClicked: false,
       jinja_input: 'Enter your Jinja template here!\n\nSample {{ type }} Template',
       jinja_variable: '# Variables can be in JSON or YAML\n\n{\n    "type": "Jinja"\n}',
-      jinja_output: 'Enter your Jinja template here!\n\nSample Jinja Template',
+      jinja_output: '',
       jinja_error: 'Backend errors (If any) will be displayed here!',
       response_code: 200,
       errors: {
@@ -52,7 +54,7 @@ class App extends React.Component {
       this.setState({jinja_output: response.data});
     }, (error) => {
       this.setState({response_code: error.response.status});
-      this.setState({jinja_output: error.response.data});
+      this.setState({jinja_output: "\n" + error.response.data});
     });
   }
   isReady = (errors) => {
@@ -65,6 +67,7 @@ class App extends React.Component {
   }
   submitButton = (e) => {
     let errors = this.state.errors;
+    this.setState({isSubmitClicked: true});
     if (this.isReady(errors)) {
       this.setState({jinja_error: 'Backend errors (If any) will be displayed here!'})
       this.setState({error: false});
@@ -125,7 +128,7 @@ class App extends React.Component {
       console.log(errors)
     });
   }
-  dropHandle = (event) => {
+  dropHandleJinja = (event) => {
     event.stopPropagation();
     event.preventDefault();
     var that = this;
@@ -133,17 +136,33 @@ class App extends React.Component {
       function(data) {
         that.setState({jinja_input: data});
       });
-    console.log(event.dataTransfer.files[0].dropEffect);
+  }
+  dropHandleVar = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    var that = this;
+    event.dataTransfer.files[0].text().then(
+      function(data) {
+        that.setState({jinja_variable: data});
+      });
+  }
+  preventDef = (event) => {
+    event.preventDefault();
   }
   render() {
     return (
-      <div className="container">
+      <div>
         <h1>Jinja2 Renderer</h1>
+        <Button
+            primary
+            attached='bottom'
+            content='Render'
+            onClick={this.submitButton}
+          />
         <Status error={this.state.error} errors={this.state.errors} />
         <br />
-        <JinjaInput jinja_input={this.state.jinja_input} jinja_variable={this.state.jinja_variable} jinja_output={this.state.jinja_output} inputChange={this.inputChange} jinjaInput={this.jinjaInput} variableInput={this.variableInput} dropHandle={this.dropHandle} />
-        <div className="text-center"><button className="ui positive button" onClick={this.submitButton}>Render Jinja</button></div>
-        <CompilerOutput jinja_error={this.state.jinja_error} jinja_output={this.state.jinja_output} response_code={this.state.response_code} />
+        <JinjaInput jinja_input={this.state.jinja_input} jinja_variable={this.state.jinja_variable} jinja_output={this.state.jinja_output} inputChange={this.inputChange} jinjaInput={this.jinjaInput} variableInput={this.variableInput} dropHandleJinja={this.dropHandleJinja} dropHandleVar={this.dropHandleVar} preventDef={this.preventDef} />
+        { this.state.isSubmitClicked ? <CompilerOutput jinja_error={this.state.jinja_error} jinja_output={this.state.jinja_output} response_code={this.state.response_code} />: ""}
       </div>
     );
   }
