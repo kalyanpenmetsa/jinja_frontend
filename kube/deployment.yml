@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jinja-frontend
-  namespace: jinja-dev
+  namespace: jinja
 spec:
   replicas: 1
   selector:
@@ -16,11 +16,11 @@ spec:
         app: jinja-frontend
     spec:
       containers:
-      - name: jinja-frontend-container
+      - name: jinja-frontend
         image: penmetsa29/jinja-frontend:v1
         ports:
         - name: jinja-frontend
-          containerPort: 3000
+          containerPort: 80
         resources:
           limits:
             memory: "2Gi"
