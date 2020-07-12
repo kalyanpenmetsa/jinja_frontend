@@ -3,15 +3,15 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-django";
 import "ace-builds/src-noconflict/mode-yaml";
 import "ace-builds/src-noconflict/theme-tomorrow_night";
+import SplitPane from "react-split-pane";
 
 function JinjaInput(props) {
   return(
-    <div>
-      <div className="row">
-        <div className="col" onDrop={props.dropHandleJinja} onDragOver={props.preventDef}>
-          <h5><div className="text-center">Jinja Input</div></h5>
+    <SplitPane split="horizontal" minSize={props.window_height*0.1} maxSize={props.window_height*0.7} defaultSize={props.window_height*0.5} >
+        <div onDrop={props.dropHandleJinja} onDragOver={props.preventDef}>
             <AceEditor
-              width="auto"
+              height={props.window_height*0.5}
+              width={props.window_width*0.5}
               mode="django"
               theme="tomorrow_night"
               onChange={props.jinjaInput}
@@ -24,14 +24,15 @@ function JinjaInput(props) {
                 highlightSelectedWord: true,
                 enableBasicAutocompletion: true,
                 enableLiveAutocompletion: true,
-                enableSnippets: true
+                enableSnippets: true,
+                showPrintMargin: false
               }}
             />
         </div>
-        <div className="col" onDrop={props.dropHandleVar} onDragOver={props.preventDef}>
-          <h5><div className="text-center">Variable Input</div></h5>
+        <div onDrop={props.dropHandleVar} onDragOver={props.preventDef}>
           <AceEditor
-            width="auto"
+            height={props.window_height*0.5}
+            width={props.window_width*0.5}
             mode="yaml"
             theme="tomorrow_night"
             onChange={props.variableInput}
@@ -44,13 +45,12 @@ function JinjaInput(props) {
               highlightSelectedWord: true,
               enableBasicAutocompletion: true,
               enableLiveAutocompletion: true,
-              enableSnippets: true
+              enableSnippets: true,
+              showPrintMargin: false
             }}
           />
         </div>
-      </div>
-      <br />
-    </div>
+    </SplitPane>
   );
 }
 

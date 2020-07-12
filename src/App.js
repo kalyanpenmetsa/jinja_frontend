@@ -2,18 +2,19 @@ import React from 'react';
 import './App.css';
 import JinjaInput from './components/JinjaInput.js';
 import CompilerOutput from './components/CompilerOutput.js';
+import SplitPane from "react-split-pane";
 import Status from './components/Status.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'semantic-ui-css/semantic.min.css';
 import { Button } from 'semantic-ui-react';
 import yaml from 'js-yaml';
 import axios from 'axios';
+import './edit.css';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isSubmitClicked: false,
       jinja_input: 'Enter your Jinja template here!\n\nSample {{ type }} Template',
       jinja_variable: '# Variables can be in JSON or YAML\n\n{\n    "type": "Jinja"\n}',
       jinja_output: '',
@@ -25,6 +26,20 @@ class App extends React.Component {
       }
     }
   }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions = () => {
+    this.setState({ window_width: window.innerWidth, window_height: window.innerHeight });
+  }
+
   isJson = (str) => {
     try {
         JSON.parse(str);
@@ -67,7 +82,6 @@ class App extends React.Component {
   }
   submitButton = (e) => {
     let errors = this.state.errors;
-    this.setState({isSubmitClicked: true});
     if (this.isReady(errors)) {
       this.setState({jinja_error: 'Backend errors (If any) will be displayed here!'})
       this.setState({error: false});
@@ -161,8 +175,28 @@ class App extends React.Component {
           />
         <Status error={this.state.error} errors={this.state.errors} />
         <br />
-        <JinjaInput jinja_input={this.state.jinja_input} jinja_variable={this.state.jinja_variable} jinja_output={this.state.jinja_output} inputChange={this.inputChange} jinjaInput={this.jinjaInput} variableInput={this.variableInput} dropHandleJinja={this.dropHandleJinja} dropHandleVar={this.dropHandleVar} preventDef={this.preventDef} />
-        { this.state.isSubmitClicked ? <CompilerOutput jinja_error={this.state.jinja_error} jinja_output={this.state.jinja_output} response_code={this.state.response_code} />: ""}
+        <SplitPane split="vertical" minSize={this.state.window_width*0.2} maxSize={this.state.window_width*0.8} defaultSize={this.state.window_width*0.5}>
+          <JinjaInput
+              window_height={this.state.window_height}
+              window_width={this.state.window_width}
+              jinja_input={this.state.jinja_input}
+              jinja_variable={this.state.jinja_variable}
+              jinja_output={this.state.jinja_output}
+              inputChange={this.inputChange}
+              jinjaInput={this.jinjaInput}
+              variableInput={this.variableInput}
+              dropHandleJinja={this.dropHandleJinja}
+              dropHandleVar={this.dropHandleVar}
+              preventDef={this.preventDef}
+          />
+          <CompilerOutput
+              window_height={this.state.window_height}
+              window_width={this.state.window_width}
+              jinja_error={this.state.jinja_error}
+              jinja_output={this.state.jinja_output}
+              response_code={this.state.response_code}
+          />
+        </SplitPane>
       </div>
     );
   }

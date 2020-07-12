@@ -10,8 +10,8 @@ function CompilerOutput(props) {
   : props.jinja_output;
   return(
     <div>
-        <br />
         <AceEditor
+          height={props.window_height}
           width="auto"
           mode="markdown"
           theme="tomorrow_night"
@@ -20,8 +20,6 @@ function CompilerOutput(props) {
           editorProps={{ $blockScrolling: true }}
           setOptions={{
             fontSize: "12pt",
-            minLines: 15,
-            maxLines: 15,
             showLineNumbers: false,
             highlightActiveLine: false,
             highlightGutterLine: false,
@@ -31,7 +29,9 @@ function CompilerOutput(props) {
             indentedSoftWrap: false,
             enableSnippets: true,
             cursorStyle: "slim",
-            readOnly: true
+            readOnly: true,
+            showGutter: false,
+            showPrintMargin: false
           }}
 
         />
