@@ -10,7 +10,7 @@ function JinjaInput(props) {
     <SplitPane split="horizontal" minSize={props.window_height*0.1} maxSize={props.window_height*0.7} defaultSize={props.window_height*0.5} onChange={props.handleHorizontalSlider} >
         <div onDrop={props.dropHandleJinja} onDragOver={props.preventDef}>
             <AceEditor
-              height={props.horizontal_slider_position || props.window_height*0.5}
+              height={props.horizontal_slider_position - 0.5 || props.window_height*0.5 - 0.5}
               width={props.vertical_slider_position || props.window_width*0.5}
               mode="django"
               theme="tomorrow_night"

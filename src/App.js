@@ -2,11 +2,11 @@ import React from 'react';
 import './App.css';
 import JinjaInput from './components/JinjaInput.js';
 import CompilerOutput from './components/CompilerOutput.js';
+import Header from './components/Header.js';
 import SplitPane from "react-split-pane";
 import Status from './components/Status.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'semantic-ui-css/semantic.min.css';
-import { Button } from 'semantic-ui-react';
 import yaml from 'js-yaml';
 import axios from 'axios';
 import './edit.css';
@@ -17,7 +17,7 @@ class App extends React.Component {
     this.state = {
       jinja_input: 'Enter your Jinja template here!\n\nSample {{ type }} Template',
       jinja_variable: '# Variables can be in JSON or YAML\n\n{\n    "type": "Jinja"\n}',
-      jinja_output: '',
+      jinja_output: 'Enter your Jinja template here!\n\nSample Jinja Template',
       jinja_error: 'Backend errors (If any) will be displayed here!',
       response_code: 200,
       errors: {
@@ -172,15 +172,8 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1>Jinja2 Renderer</h1>
-        <Button
-            primary
-            attached='bottom'
-            content='Render'
-            onClick={this.submitButton}
-          />
+        <Header submitButton={this.submitButton} />
         <Status error={this.state.error} errors={this.state.errors} />
-        <br />
         <SplitPane split="vertical" minSize={this.state.window_width*0.2} maxSize={this.state.window_width*0.8} defaultSize={this.state.window_width*0.5} onChange={this.handleVerticalSlider}>
           <JinjaInput
               window_height={this.state.window_height}
