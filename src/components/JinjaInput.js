@@ -7,11 +7,11 @@ import SplitPane from "react-split-pane";
 
 function JinjaInput(props) {
   return(
-    <SplitPane split="horizontal" minSize={props.window_height*0.1} maxSize={props.window_height*0.7} defaultSize={props.window_height*0.5} >
+    <SplitPane split="horizontal" minSize={props.window_height*0.1} maxSize={props.window_height*0.7} defaultSize={props.window_height*0.5} onChange={props.handleHorizontalSlider} >
         <div onDrop={props.dropHandleJinja} onDragOver={props.preventDef}>
             <AceEditor
-              height={props.window_height*0.5}
-              width={props.window_width*0.5}
+              height={props.horizontal_slider_position || props.window_height*0.5}
+              width={props.vertical_slider_position || props.window_width*0.5}
               mode="django"
               theme="tomorrow_night"
               onChange={props.jinjaInput}
@@ -31,8 +31,8 @@ function JinjaInput(props) {
         </div>
         <div onDrop={props.dropHandleVar} onDragOver={props.preventDef}>
           <AceEditor
-            height={props.window_height*0.5}
-            width={props.window_width*0.5}
+            height={props.window_height - props.horizontal_slider_position || props.window_height*0.5}
+            width={props.vertical_slider_position || props.window_width*0.5}
             mode="yaml"
             theme="tomorrow_night"
             onChange={props.variableInput}

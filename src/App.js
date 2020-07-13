@@ -160,6 +160,12 @@ class App extends React.Component {
         that.setState({jinja_variable: data});
       });
   }
+  handleVerticalSlider = (pos) => {
+    this.setState({vertical_slider_position: pos});
+  }
+  handleHorizontalSlider = (pos) => {
+    this.setState({horizontal_slider_position: pos});
+  }
   preventDef = (event) => {
     event.preventDefault();
   }
@@ -175,10 +181,13 @@ class App extends React.Component {
           />
         <Status error={this.state.error} errors={this.state.errors} />
         <br />
-        <SplitPane split="vertical" minSize={this.state.window_width*0.2} maxSize={this.state.window_width*0.8} defaultSize={this.state.window_width*0.5}>
+        <SplitPane split="vertical" minSize={this.state.window_width*0.2} maxSize={this.state.window_width*0.8} defaultSize={this.state.window_width*0.5} onChange={this.handleVerticalSlider}>
           <JinjaInput
               window_height={this.state.window_height}
               window_width={this.state.window_width}
+              vertical_slider_position={this.state.vertical_slider_position}
+              horizontal_slider_position={this.state.horizontal_slider_position}
+              handleHorizontalSlider={this.handleHorizontalSlider}
               jinja_input={this.state.jinja_input}
               jinja_variable={this.state.jinja_variable}
               jinja_output={this.state.jinja_output}
